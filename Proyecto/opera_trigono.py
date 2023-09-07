@@ -14,14 +14,19 @@ class Opera_trigono(Abstract_num):
             left_value = self.left.operacion(arbol)
 
         
-        if self.tipo == 'Seno':
+        if self.tipo.operacion(arbol) == 'seno':
             return sin(left_value)
-        elif self.tipo == 'Coseno':
+        elif self.tipo.operacion(arbol) == 'coseno':
             return cos(left_value)
-        elif self.tipo == 'Tangente':
+        elif self.tipo.operacion(arbol) == 'tangente':
             return tan(left_value)
         else:
             return None 
+
+    def obtener_fila(self):
+        return super().obtener_fila()
     
+    def obtener_columna(self):
+        return super().obtener_columna()
 
 

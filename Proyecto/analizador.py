@@ -1,13 +1,21 @@
+from opera_aritm import Opera_aritm
+from opera_trigono import Opera_trigono
+from lexema import Lexema
+from numero import Numero
+from abstract_num import Abstract_num
+
+
 
 class analizador:
 
 
     global linea 
     global columna
-    global instru
+    global instrucciones
     global lista_lexa
     
     lista_lexa = []
+    instrucciones = []
 
     def __init__(self) :
             
@@ -16,12 +24,12 @@ class analizador:
 
 
     reversed = {
-        'OPERACIONES' : 'operacion',
+        'OPERACIONES' : 'operaciones',
         'SUMA' : 'suma',
         'RESTA': 'resta',
         'MULTIPLICACIÓN' : 'multiplicacion',
         'DIVISIÓN' : 'division',
-        'POTENCIA' : 'potencias',
+        'POTENCIA' : 'potencia',
         'RAIZ' : 'raiz',
         'INVERSO' : 'inverso',
         'SENO' : 'seno',
@@ -62,18 +70,27 @@ class analizador:
                 if lexema and lista:
                     self.num_columna += 1
 
-                    lista_lexa.append(lexema)
+                    lexemas = Lexema(lexema,self.num_linea,self.num_columna)
+
+                    lista_lexa.append(lexemas)
                     self.num_columna += len(lexema) + 1
                     puntero = 0
             elif char.isdigit():
                 token, lista = self.fomar_numero(lista)
                 if token and lista:
                     self.num_columna += 1
-                    lista_lexa.append(token)
+
+                    numeros = Numero(token,self.num_linea,self.num_columna)
+
+
+                    lista_lexa.append(numeros)
                     self.num_columna += len(str(token)) + 1
                     puntero = 0
             elif char == '[' or char == ']':
-                lista_lexa.append(char)
+
+                lex = Lexema(char,self.num_linea,self.num_columna)
+
+                lista_lexa.append(lex)
                 lista = lista[1:]
                 puntero = 0
                 self.num_columna += 1
@@ -86,7 +103,7 @@ class analizador:
                 lista = lista[1:]
                 puntero = 0 
                 self.num_linea += 1
-                self.num_columna += 1
+                self.num_columna = 1
             else:
                 lista = lista[1:]
                 puntero = 0
@@ -125,6 +142,45 @@ class analizador:
             else:
                 num += char
         return None,None
+    
+    def operar(self):
+        global lista_lexa
+        global instrucciones
+        operacion = ''
+        num1 = '' 
+        num2 = ''
+        while lista_lexa:
+            Lexema = lista_lexa.pop(0)
+            if Lexema.operacion(None) == 'operacion':
+                operacion = lista_lexa.pop(0)
+            elif Lexema.operacion(None) == 'valor1':
+                num1 = lista_lexa.pop(0)
+                if num1.operacion(None) == '[':
+                    num1 = self.operar()
+            elif Lexema.operacion(None) == 'valor2':
+                num2 = lista_lexa.pop(0)
+                if num2.operacion(None) == '[':
+                    num2 = self.operar()
+
+            if operacion and num1 and num2:
+                return Opera_aritm(num1,num2,operacion, f'Inicio: {operacion.obtener_fila()}:{operacion.obtener_columna()}' , f'Fin: {num2.obtener_fila()}:{num2.obtener_columna()} ')
+            
+            elif operacion and num1 and operacion.operacion(None) == ('seno' or 'coseno' or 'tangente'):
+                return Opera_trigono(num1, operacion, f'Inicio: {operacion.obtener_fila()}:{operacion.obtener_columna()}', f'Fin: {num1.obtener_fila()}:{num1.obtener_columna()}')
+        return None
+
+    def recursividad_operar(self):
+        global instrucciones
+
+        while True:
+            operacion = self.operar()
+            if operacion:
+                instrucciones.append(operacion)
+            else:
+                break
+        
+        for instruccion in instrucciones:
+            print(instruccion.operacion(None))
 
     def imprimir_lista(self, lista):
         if lista is not None:
@@ -137,17 +193,16 @@ class analizador:
 entrada = '''{
     "operaciones": [
         {
-            "operacion": "restas",
+            "operacion": "suma",
             "valor1": 4.5,
-            "valor2": 5.32,
-            "valor3": 5.32
+            "valor2": 5.32
         },
         {
             "operacion": "resta",
             "valor1": 4.5,
             "valor2": [
                 {
-                    "operaciones": "potencias",
+                    "operacion": "potencia",
                     "valor1": 10,
                     "valor2": 3
                 }
@@ -164,12 +219,12 @@ entrada = '''{
             "valor2": 5.32
         },
         {
-            "operaciones": "multiplicacion",
+            "operacion": "multiplicacion",
             "valor1": 7,
             "valor2": 3
         },
         {
-            "operaciones": "division",
+            "operacion": "division",
             "valor1": 15,
             "valor2": 3
         }
@@ -187,3 +242,4 @@ entrada = '''{
 app = analizador()
 
 app.insutrucciones_lexam(entrada)
+app.recursividad_operar()

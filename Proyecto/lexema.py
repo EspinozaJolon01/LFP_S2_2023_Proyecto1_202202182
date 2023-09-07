@@ -8,3 +8,9 @@ class Lexema(Abstract_num):
 
     def operacion(self, arbol):
         return self.lexema
+    
+    def obtener_fila(self):
+        return super().obtener_fila()
+    
+    def obtener_columna(self):
+        return super().obtener_columna()
