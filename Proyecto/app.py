@@ -1,104 +1,109 @@
 import tkinter as tk
-from tkinter import Menu, filedialog, messagebox, ttk
+from tkinter import filedialog, messagebox
+from tkinter.scrolledtext import ScrolledText
+
 from analizador import analizador
-import json
 
-lista_analizado = analizador()
-# Variable global para almacenar el contenido
-contenido = None
-archivo1 = ""
-cursor_label = None
-lista_lexmas = []
 
-def leet_json():
-    global archivo1
-    archivo1 = filedialog.askopenfilename(filetypes=[("Archivo JSON", "*.json")])
-    if archivo1:
-        with open(archivo1, 'r') as file:
-            contenido_json = json.load(file)
-            contenido.delete("1.0", tk.END)
-            contenido.insert("1.0", json.dumps(contenido_json, indent=4))
+
+
+class app:
+
+    
+
+    global contenido_json
+
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Menu")
+        self.path = None
+        self.Analizar = analizador()
         
-    lista_lexmas.append(contenido_json)
-    print(archivo1)
 
-def guardar_archivo():
-    global contenido, archivo1
-    if contenido and archivo1:
-        try:
-            with open(archivo1, "w") as f:
-                f.write(contenido.get("1.0", tk.END))
-            messagebox.showinfo("Exito","Guardado exitosamente en ")
-        except Exception as e:
-            messagebox.showerror("Error","Error al guardar: " + str(e))
+        self.linea_numero = tk.Text(root, width=4, padx=4, takefocus=0, border=0, background='#5FA0E0', state='disabled')
+        self.linea_numero.pack(side=tk.LEFT, fill=tk.Y)
 
-def guardar_como_archivo():
-    global contenido
-    if contenido:
-        archivo = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Archivo JSON", "*.json")])
-        if archivo:
-            with open(archivo, "w") as f:
-                f.write(contenido.get("1.0", tk.END))
+        self.widget = ScrolledText(self.root, wrap=tk.WORD)
+        self.widget=ScrolledText(root,width=150,height=50)
+        self.widget.pack(expand=True, fill='both')
+        # self.widget.pack(side=tk.TOP, fill=tk.Y)
 
-def analizar_archivo():
-    lista_analizado.imprimir_lista(lista_lexmas)
+        self.widget.bind('<Key>', self.acutualizar_linea_num)
+        self.widget.bind('<MouseWheel>', self.acutualizar_linea_num)
 
-def errores():
-    print("Errores")
+        self.conteo_linea = 1
 
-def reporte():
-    print("reporte")
+        self.menu_bar = tk.Menu(root)
+        self.root.config(menu=self.menu_bar)
 
-def actualizar_cursor_label(event):
-    cursor_pos = contenido.index(tk.CURRENT)
-    fila, columna = map(int, cursor_pos.split('.'))
-    cursor_label.config(text=f"Fila: {fila}, Columna: {columna}")
+        self.file_menu = tk.Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="Archivo", menu=self.file_menu)
+        self.file_menu.add_command(label="Abrir", command=self.leer_xml)
+        self.file_menu.add_command(label="Guardar", command=self.guardar)
+        self.file_menu.add_command(label="Guardar Como", command=self.guardar_como)
+        self.file_menu.add_separator()
+        self.file_menu.add_command(label="Salir", command=self.root.quit)
+        
+        self.menu_bar.add_cascade(label="Analizar", command=self.analizar_lexema)
+        self.menu_bar.add_cascade(label="Errores")
+        self.menu_bar.add_cascade(label="Reporte")
 
-def salir():
-    root.destroy()
 
-root = tk.Tk()
-root.title("Editor de Texto")
-root.attributes('-fullscreen', True)  # para abrir en toda la pantalla
+    def leer_xml(self):
+        global contenido_json
+        path = filedialog.askopenfilename(filetypes=[("Archivos json", "*.json")])
+        self.path = path 
+        if path:
+            with open(path, 'r') as file:
+                contenido_json = file.read()
+                self.widget.delete(1.0, tk.END)
+                self.widget.insert(tk.END, contenido_json)
+            self.acutualizar_linea_num()
 
-root.configure(bg="#e2e8f3")
 
-menubar = Menu(root) 
+    def guardar(self):
+        # path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("Archivos", "*.json")])
+        global contenido_json
+        path = self.path
+        if path:
+            contenido_json = self.widget.get(1.0, tk.END)
+            with open(path, 'w') as file:
+                file.write(contenido_json)
+            messagebox.showinfo("Guardado", "Archivo guardado exitosamente.")
+    
+    def guardar_como(self):
+        global contenido_json
+        path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("Archivos", "*.json")])
+        if path:
+            contenido_json = self.widget.get(1.0, tk.END)
+            with open(path, 'w+') as file:
+                file.write(contenido_json)
+            messagebox.showinfo("Guardado", "Archivo guardado exitosamente.")
 
-archivo_menu = Menu(menubar, tearoff=0)
-archivo_menu.add_command(label="Abrir", command=leet_json)
-archivo_menu.add_command(label="Guardar", command=guardar_archivo)
-archivo_menu.add_command(label="Guardar como", command=guardar_como_archivo)
-archivo_menu.add_separator()
-archivo_menu.add_command(label="Salir", command=salir)
+    def acutualizar_linea_num(self, event=None):
+        conteo = self.widget.get('1.0', tk.END).count('\n')
+        if conteo != self.conteo_linea:
+            self.linea_numero.config(state=tk.NORMAL)
+            self.linea_numero.delete(1.0, tk.END)
+            for line in range(1, conteo + 1):
+                self.linea_numero.insert(tk.END, f"{line}\n")
+            self.linea_numero.config(state=tk.DISABLED)
+            self.conteo_linea = conteo
+    
+    def analizar_lexema(self):
+        global contenido_json
+        self.Analizar.insutrucciones_lexam(contenido_json)
+        resultados =  self.Analizar.recursividad_operar()
+        resultados_as_string = ""
+        for resultado in resultados:
+            resultados_as_string += str(resultado.operacion(None)) + "\n"
+            # print(resultado.operar(None))
+        messagebox.showinfo("Resultados",resultados_as_string)
 
-archivo_menu1 = Menu(menubar, tearoff=0)
-archivo_menu1.add_command(label="analizar", command=analizar_archivo)
 
-archivo_menu2 = Menu(menubar, tearoff=0)
-archivo_menu2.add_command(label="errores", command=errores)
-
-archivo_menu3 = Menu(menubar, tearoff=0)
-archivo_menu3.add_command(label="reporte", command=reporte)
-
-menubar.add_cascade(label="Archivo", menu=archivo_menu)
-menubar.add_cascade(label="Analizar", menu=archivo_menu1)
-menubar.add_cascade(label="Errores", menu=archivo_menu2)
-menubar.add_cascade(label="Reporte", menu=archivo_menu3)
-
-root.config(menu=menubar)
-
-# Crear el widget Text para el contenido y ajustar su tamaño y ubicación
-contenido = tk.Text(root, width=200, height=60)  # Ajusta el ancho y alto según tus preferencias
-contenido.place(relx=0.5, rely=0.5, anchor="center")
-
-# Agregar una etiqueta para mostrar la posición del cursor
-cursor_label = tk.Label(root, text="", bg="#e2e8f3")
-cursor_label.place(relx=0.01, rely=0.01)
-
-# Asociar el evento de movimiento del mouse al widget Text
-contenido.bind("<Motion>", actualizar_cursor_label)
-
-root.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = app(root)
+    root.mainloop()
 
 

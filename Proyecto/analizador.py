@@ -109,8 +109,10 @@ class analizador:
                 puntero = 0
                 self.num_columna += 1
             
-        for lexema in lista_lexa:
-            print(lexema)
+        #for lexema in lista_lexa:
+        #    print(lexema)
+        
+        return lista_lexa
     
     def coleccionar_lexema(self, lista):
         global linea
@@ -179,8 +181,14 @@ class analizador:
             else:
                 break
         
-        for instruccion in instrucciones:
-            print(instruccion.operacion(None))
+        #for instruccion in instrucciones:
+        #    print("===========resultado===========")
+        #    print(instruccion.operacion(None))
+        #    print("--------------fila--------------")
+        #    print(instruccion.obtener_fila())
+        #    print("--------------columna--------------")
+        #    print(instruccion.obtener_columna())
+        return instrucciones
 
     def imprimir_lista(self, lista):
         if lista is not None:
@@ -193,7 +201,7 @@ class analizador:
 entrada = '''{
     "operaciones": [
         {
-            "operacion": "suma",
+            "operacion": "suma$",
             "valor1": 4.5,
             "valor2": 5.32
         },
@@ -239,7 +247,7 @@ entrada = '''{
     ]
 }'''
 
-app = analizador()
+#app = analizador()
 
-app.insutrucciones_lexam(entrada)
-app.recursividad_operar()
+#app.insutrucciones_lexam(entrada)
+#app.recursividad_operar()
