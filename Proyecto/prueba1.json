@@ -1,7 +1,7 @@
 {
     "operaciones": [
         {
-            "operacion": "se",
+            "operacion": "resta",
             "valor1": 4.5,
             "valor2": 5.32
         },
@@ -39,10 +39,16 @@
     ],
     "configuraciones": [
         {
-            "textos": "Opercaiones",
+            "textos": "Operaciones",
             "fondo": "azul",
             "fuente": "blanco",
             "forma": "circulo"
         }
     ]
 }
+
+
+
+
+
+

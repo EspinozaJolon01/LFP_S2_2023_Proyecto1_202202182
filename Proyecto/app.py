@@ -45,8 +45,8 @@ class app:
         self.file_menu.add_command(label="Salir", command=self.root.quit)
         
         self.menu_bar.add_cascade(label="Analizar", command=self.analizar_lexema)
-        self.menu_bar.add_cascade(label="Errores")
-        self.menu_bar.add_cascade(label="Reporte")
+        self.menu_bar.add_cascade(label="Errores", command=self.errores_lexemas)
+        self.menu_bar.add_cascade(label="Reporte", command=self.generar_graficas)
 
 
     def leer_xml(self):
@@ -90,15 +90,43 @@ class app:
             self.linea_numero.config(state=tk.DISABLED)
             self.conteo_linea = conteo
     
+    
     def analizar_lexema(self):
-        global contenido_json
-        self.Analizar.insutrucciones_lexam(contenido_json)
-        resultados =  self.Analizar.recursividad_operar()
-        resultados_as_string = ""
-        for resultado in resultados:
-            resultados_as_string += str(resultado.operacion(None)) + "\n"
-            # print(resultado.operar(None))
-        messagebox.showinfo("Resultados",resultados_as_string)
+        try:
+            global contenido_json
+            self.Analizar.insutrucciones_lexam(contenido_json)
+            resultados =  self.Analizar.recursividad_operar()
+            resultados_as_string = ""
+            Opercion = 1
+
+
+            for resultado in resultados:
+                if isinstance(resultado.operacion(None), int) or isinstance(resultado.operacion(None),float) == True:
+                    resultados_as_string += str(f"Operacion: {Opercion} --> {resultado.tipo.operacion(None)} = {resultado.operacion(None)}") + "\n"
+                    Opercion += 1
+                # resultados_as_string += str(resultado.operacion(None)) + "\n"
+                # print(resultado.operar(None))
+            messagebox.showinfo("Resultados",resultados_as_string)
+
+
+        
+        except:
+            messagebox.showinfo("Error","no se ha ingresado ningun archivo")
+    
+    def errores_lexemas(self):
+        try:
+            print("probando metodo")
+        
+        except:
+            messagebox.showinfo("Error","no se ha ingresado ningun archivo")
+
+    def generar_graficas(self):
+        try:
+            print("probando metodo")
+        
+        except:
+            messagebox.showinfo("Error","no se ha ingresado ningun archivo")
+
 
 
 if __name__ == "__main__":

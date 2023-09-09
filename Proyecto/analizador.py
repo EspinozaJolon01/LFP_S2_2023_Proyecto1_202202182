@@ -3,6 +3,7 @@ from opera_trigono import Opera_trigono
 from lexema import Lexema
 from numero import Numero
 from abstract_num import Abstract_num
+from lexema_errores import Lexema_errores
 
 
 
@@ -13,9 +14,13 @@ class analizador:
     global columna
     global instrucciones
     global lista_lexa
+    global lista_errores
+    global lexem
     
     lista_lexa = []
     instrucciones = []
+    lista_errores = []
+    
 
     def __init__(self) :
             
@@ -25,6 +30,9 @@ class analizador:
 
     reversed = {
         'OPERACIONES' : 'operaciones',
+        'Valor1': 'valor1',
+        'Valor2': 'valor2',
+        'Operacion': 'operacion',
         'SUMA' : 'suma',
         'RESTA': 'resta',
         'MULTIPLICACIÓN' : 'multiplicacion',
@@ -37,10 +45,14 @@ class analizador:
         'TANGENTE' : 'tangente',
         'MOD' : 'mod',
         'CONFIGURACIONES' : 'configuraciones',
-        'TEXTO' : 'texto',
-        'FONDO' : 'fondo',
-        'FUENTE' :'fuente',
-        'FORMA' : 'forma',
+        'TEXTO' : 'Operaciones',
+        'FONDO' : 'azul',
+        'FUENTE' :'blanco',
+        'Textos' : 'textos',
+        'Fondo' : 'fondo',
+        'Fuente' : 'fuente',
+        'Forma' : 'forma',
+        'Circulo' : 'circulo',
         'COMA' : ',',
         'PUNTO' : '.',
         'PUNTOS': ':',
@@ -57,7 +69,12 @@ class analizador:
         global linea
         global columna
         global lista_lexa
+        global lista_errores
+        global lexem
+        
         lexema = ''
+        contador = 1
+        
         
         puntero = 0
 
@@ -69,23 +86,25 @@ class analizador:
                 lexema, lista = self.coleccionar_lexema(lista[puntero:])
                 if lexema and lista:
                     self.num_columna += 1
-
                     lexemas = Lexema(lexema,self.num_linea,self.num_columna)
-
                     lista_lexa.append(lexemas)
                     self.num_columna += len(lexema) + 1
                     puntero = 0
+
             elif char.isdigit():
                 token, lista = self.fomar_numero(lista)
                 if token and lista:
                     self.num_columna += 1
-
+                    
                     numeros = Numero(token,self.num_linea,self.num_columna)
 
 
                     lista_lexa.append(numeros)
                     self.num_columna += len(str(token)) + 1
+
                     puntero = 0
+                
+
             elif char == '[' or char == ']':
 
                 lex = Lexema(char,self.num_linea,self.num_columna)
@@ -104,15 +123,32 @@ class analizador:
                 puntero = 0 
                 self.num_linea += 1
                 self.num_columna = 1
+
+            elif char == ' ' or char == '\r' or char == '{' or char == '}' or char == ',' or char == ':' or char == '.':
+                lista = lista[1:]
+                self.num_columna += 1
+                puntero = 0
             else:
                 lista = lista[1:]
                 puntero = 0
                 self.num_columna += 1
+                lista_errores.append(Lexema_errores(contador,"Error lexico",char,self.num_linea,self.num_columna))
+                contador += 1
             
-        #for lexema in lista_lexa:
-        #    print(lexema)
+        # for lexema in lista_lexa:
+        #     print(lexema)
+        # print("----------------")
+        # for erroes in lista_errores:
+        #     print(erroes)
+        print("--------------------")
+        for error in lista_errores:
+            print("Error encontrado: num: {} error: {}, Lexema: {}, Fila: {}, Columna: {}".format(
+                error.num, error.tipo, error.lexema, error.obtener_fila(), error.obtener_columna()))
+        print("--------------------")
+        
         
         return lista_lexa
+
     
     def coleccionar_lexema(self, lista):
         global linea
@@ -127,6 +163,12 @@ class analizador:
             else:
                 lexema += char
         return None,None
+
+    def verificar_errores(self):
+        global lista_errores
+        for errores in lista_errores:
+            print(errores)
+
 
     def fomar_numero(self, lista):
         num = ''
@@ -181,27 +223,18 @@ class analizador:
             else:
                 break
         
-        #for instruccion in instrucciones:
-        #    print("===========resultado===========")
-        #    print(instruccion.operacion(None))
-        #    print("--------------fila--------------")
-        #    print(instruccion.obtener_fila())
-        #    print("--------------columna--------------")
-        #    print(instruccion.obtener_columna())
+        # for instruccion in instrucciones:
+        #     print("===========resultado===========")
+        #     print(instruccion.operacion(None))
+
         return instrucciones
 
-    def imprimir_lista(self, lista):
-        if lista is not None:
-            for elemento in lista:
-                print(elemento)
-        else:
-            print("La lista es None")
 
 
 entrada = '''{
     "operaciones": [
         {
-            "operacion": "suma$",
+            "operacion": "restaQ",
             "valor1": 4.5,
             "valor2": 5.32
         },
@@ -239,7 +272,7 @@ entrada = '''{
     ],
     "configuraciones": [
         {
-            "textos": "Opercaiones",
+            "textos": "Operaciones",
             "fondo": "azul",
             "fuente": "blanco",
             "forma": "circulo"
@@ -247,7 +280,7 @@ entrada = '''{
     ]
 }'''
 
-#app = analizador()
+# app = analizador()
 
-#app.insutrucciones_lexam(entrada)
-#app.recursividad_operar()
+# app.insutrucciones_lexam(entrada)
+# app.recursividad_operar()
