@@ -51,6 +51,7 @@ class app:
 
     def leer_xml(self):
         global contenido_json
+        self.Analizar.limpiar_listas()
         path = filedialog.askopenfilename(filetypes=[("Archivos json", "*.json")])
         self.path = path 
         if path:
@@ -94,6 +95,7 @@ class app:
     def analizar_lexema(self):
         try:
             global contenido_json
+            self.Analizar.limpiar_listas()
             self.Analizar.insutrucciones_lexam(contenido_json)
             resultados =  self.Analizar.recursividad_operar()
             resultados_as_string = ""
@@ -115,7 +117,8 @@ class app:
     
     def errores_lexemas(self):
         try:
-            print("probando metodo")
+            messagebox.showinfo("Generado","Se genero correctamente el archivo json")
+            self.Analizar.archivo_salida()
         
         except:
             messagebox.showinfo("Error","no se ha ingresado ningun archivo")

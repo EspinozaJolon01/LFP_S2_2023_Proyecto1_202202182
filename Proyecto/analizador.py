@@ -4,6 +4,7 @@ from lexema import Lexema
 from numero import Numero
 from abstract_num import Abstract_num
 from lexema_errores import Lexema_errores
+import json
 
 
 
@@ -16,10 +17,13 @@ class analizador:
     global lista_lexa
     global lista_errores
     global lexem
+
     
     lista_lexa = []
     instrucciones = []
-    lista_errores = []
+
+    
+    lista_errores= []
     
 
     def __init__(self) :
@@ -140,15 +144,35 @@ class analizador:
         # print("----------------")
         # for erroes in lista_errores:
         #     print(erroes)
-        print("--------------------")
-        for error in lista_errores:
-            print("Error encontrado: num: {} error: {}, Lexema: {}, Fila: {}, Columna: {}".format(
-                error.num, error.tipo, error.lexema, error.obtener_fila(), error.obtener_columna()))
-        print("--------------------")
+        # print("--------------------")
+        # for error in lista_errores:
+        #     print("Error encontrado: num: {} error: {}, Lexema: {}, Fila: {}, Columna: {}".format(
+        #         error.num, error.tipo, error.lexema, error.obtener_fila(), error.obtener_columna()))
+        # print("--------------------")
         
         
         return lista_lexa
+    
 
+    def archivo_salida(self):
+        global lista_errores
+        lista_temporal = {}
+        lista_temporal["Errores"] = []
+
+        for lista_error in lista_errores:
+            lista_temporal["Errores"].append({
+                'No.' : lista_error.num,
+                'descripcion' : {
+                    'lexema' : lista_error.lexema,
+                    'tipo' : lista_error.tipo,
+                    'columna': lista_error.columna,
+                    'fila' : lista_error.fila
+                }
+            })
+
+        
+        with open('RESULTADOS_202202182.json', 'w') as file:
+            json.dump(lista_temporal,file, indent=4)
     
     def coleccionar_lexema(self, lista):
         global linea
@@ -213,6 +237,8 @@ class analizador:
                 return Opera_trigono(num1, operacion, f'Inicio: {operacion.obtener_fila()}:{operacion.obtener_columna()}', f'Fin: {num1.obtener_fila()}:{num1.obtener_columna()}')
         return None
 
+    
+
     def recursividad_operar(self):
         global instrucciones
 
@@ -229,6 +255,13 @@ class analizador:
 
         return instrucciones
 
+
+    def limpiar_listas(self):
+        lista_lexa.clear()
+        lista_errores.clear()
+        instrucciones.clear()
+        self.num_columna = 1
+        self.num_linea = 1
 
 
 entrada = '''{
