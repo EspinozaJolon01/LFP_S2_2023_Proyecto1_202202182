@@ -104,7 +104,7 @@ class app:
 
             for resultado in resultados:
                 if isinstance(resultado.operacion(None), int) or isinstance(resultado.operacion(None),float) == True:
-                    resultados_as_string += str(f"Operacion: {Opercion} --> {resultado.tipo.operacion(None)} = {resultado.operacion(None)}") + "\n"
+                    resultados_as_string += str(f"Operacion: {Opercion} > {resultado.tipo.operacion(None)} = {resultado.operacion(None)}") + "\n"
                     Opercion += 1
                 # resultados_as_string += str(resultado.operacion(None)) + "\n"
                 # print(resultado.operar(None))

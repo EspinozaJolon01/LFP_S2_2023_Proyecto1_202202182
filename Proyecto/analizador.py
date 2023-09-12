@@ -143,18 +143,6 @@ class analizador:
                 self.num_columna += 1
                 lista_errores.append(Lexema_errores(contador,"Error lexico",char,self.num_linea,self.num_columna))
                 contador += 1
-            
-        # for lexema in lista_lexa:
-        #     print(lexema)
-        # print("----------------")
-        # for erroes in lista_errores:
-        #     print(erroes)
-        # print("--------------------")
-        # for error in lista_errores:
-        #     print("Error encontrado: num: {} error: {}, Lexema: {}, Fila: {}, Columna: {}".format(
-        #         error.num, error.tipo, error.lexema, error.obtener_fila(), error.obtener_columna()))
-        # print("--------------------")
-        
         
         return lista_lexa
     
@@ -265,7 +253,6 @@ class analizador:
         texto = """digraph G {
                     label=" """+self.texto.lexema+""""
                     rankdir="LR"
-                    
                     node[style=filled, color=" """+self.fondo.lexema+"""", fontcolor=" """+self.fuente.lexema+"""", shape="""+self.forma.lexema+"""]"""
 
         for i in range(len(instrucciones)):
@@ -282,36 +269,36 @@ class analizador:
         os.system(f'dot -Tpng bb.dot -o REPORTE_202202182.png')
 
     
-    def unir_nodos_de_graficar(self, tipo, num, clave, separador):
-        datos = ""
+    def unir_nodos_de_graficar(self, tipo, numero, codigo, barra):
+        valor = ""
 
         if tipo:
             if type(tipo) == Numero:
                 
-                datos += f'nodo{num}{clave}{separador}[label="{tipo.operacion(None)}"];\n'
+                valor += f'nodo{numero}{codigo}{barra}[label="{tipo.operacion(None)}"];\n'
 
 
             if type(tipo) == Opera_aritm:
-                datos += f'nodo{num}{clave}{separador}[label="{tipo.tipo.lexema}\\n{tipo.operacion(None)}"];\n'
+                valor += f'nodo{numero}{codigo}{barra}[label="{tipo.tipo.lexema}\\n{tipo.operacion(None)}"];\n'
 
-                datos += self.unir_nodos_de_graficar(tipo.left ,num, clave+1, separador+"_left")
+                valor += self.unir_nodos_de_graficar(tipo.left ,numero, codigo+1, barra+"_left")
 
-                datos += f'nodo{num}{clave}{separador} -> nodo{num}{clave+1}{separador}_left;\n'
+                valor += f'nodo{numero}{codigo}{barra} -> nodo{numero}{codigo+1}{barra}_left;\n'
 
-                datos += self.unir_nodos_de_graficar(tipo.right,num, clave+1, separador+"_right")
+                valor += self.unir_nodos_de_graficar(tipo.right,numero, codigo+1, barra+"_right")
 
-                datos += f'nodo{num}{clave}{separador} -> nodo{num}{clave+1}{separador}_right;\n'
+                valor += f'nodo{numero}{codigo}{barra} -> nodo{numero}{codigo+1}{barra}_right;\n'
             
             if type(tipo) == Opera_trigono:
                 
-                datos += f'nodo{num}{clave}{separador}[label="{tipo.tipo.lexema}\\n{tipo.operacion(None)}"];\n'
+                valor += f'nodo{numero}{codigo}{barra}[label="{tipo.tipo.lexema}\\n{tipo.operacion(None)}"];\n'
 
-                datos += self.unir_nodos_de_graficar(tipo.left,num, clave+1, separador+"_tri")
+                valor += self.unir_nodos_de_graficar(tipo.left,numero, codigo+1, barra+"_tri")
 
-                datos += f'nodo{num}{clave}{separador} -> nodo{num}{clave+1}{separador}_tri;\n'
+                valor += f'nodo{numero}{codigo}{barra} -> nodo{numero}{codigo+1}{barra}_tri;\n'
 
 
-        return datos
+        return valor
 
     def recursividad_operar(self):
         global instrucciones
@@ -323,10 +310,6 @@ class analizador:
             else:
                 break
         
-        # for instruccion in instrucciones:
-        #     print("===========resultado===========")
-        #     print(instruccion.operacion(None))
-
         return instrucciones
 
 
@@ -336,58 +319,3 @@ class analizador:
         instrucciones.clear()
         self.num_columna = 1
         self.num_linea = 1
-
-
-entrada = '''{
-    "operaciones": [
-        {
-            "operacion": "restaQ",
-            "valor1": 4.5,
-            "valor2": 5.32
-        },
-        {
-            "operacion": "resta",
-            "valor1": 4.5,
-            "valor2": [
-                {
-                    "operacion": "potencia",
-                    "valor1": 10,
-                    "valor2": 3
-                }
-            ]
-        },
-        {
-            "operacion": "suma",
-            "valor1": [
-                {
-                    "operacion": "seno",
-                    "valor1": 90
-                }
-            ],
-            "valor2": 5.32
-        },
-        {
-            "operacion": "multiplicacion",
-            "valor1": 7,
-            "valor2": 3
-        },
-        {
-            "operacion": "division",
-            "valor1": 15,
-            "valor2": 3
-        }
-    ],
-    "configuraciones": [
-        {
-            "textos": "Operaciones",
-            "fondo": "azul",
-            "fuente": "blanco",
-            "forma": "circulo"
-        }
-    ]
-}'''
-
-# app = analizador()
-
-# app.insutrucciones_lexam(entrada)
-# app.recursividad_operar()
