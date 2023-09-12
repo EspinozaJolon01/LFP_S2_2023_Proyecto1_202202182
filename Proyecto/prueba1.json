@@ -39,10 +39,10 @@
     ],
     "configuraciones": [
         {
-            "textos": "Operaciones",
-            "fondo": "azul",
-            "fuente": "blanco",
-            "forma": "circulo"
+            "texto": "Operaciones",
+            "fondo": "blue",
+            "fuente": "white",
+            "forma": "circle"
         }
     ]
 }

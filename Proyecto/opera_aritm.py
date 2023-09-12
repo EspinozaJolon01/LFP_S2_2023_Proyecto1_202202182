@@ -18,21 +18,21 @@ class Opera_aritm(Abstract_num):
             right_values = self.right.operacion(arbol)
         
         if self.tipo.operacion(arbol) == 'suma':
-            return left_values + right_values
+            return round(left_values + right_values,2)
         elif self.tipo.operacion(arbol) == 'resta':
-            return left_values - right_values
+            return round(left_values - right_values,2)
         elif self.tipo.operacion(arbol) == 'multiplicacion':
-            return left_values * right_values
+            return round(left_values * right_values,2)
         elif self.tipo.operacion(arbol) == 'division':
-            return left_values / right_values
+            return round(left_values / right_values,2)
         elif self.tipo.operacion(arbol) == 'modulo':
-            return left_values % right_values
+            return round(left_values % right_values,2)
         elif self.tipo.operacion(arbol) == 'potencia':
-            return left_values ** right_values
+            return round(left_values ** right_values,2)
         elif self.tipo.operacion(arbol) == 'raiz':
-            return left_values ** (1/right_values)
+            return round(left_values ** (1/right_values),2)
         elif self.tipo.operacion(arbol) == 'inverso':
-            return 1/right_values
+            return round(1/right_values, 2)
         else:
             return 0
         

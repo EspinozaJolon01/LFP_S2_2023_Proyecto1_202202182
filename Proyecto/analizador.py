@@ -5,6 +5,7 @@ from numero import Numero
 from abstract_num import Abstract_num
 from lexema_errores import Lexema_errores
 import json
+import os
 
 
 
@@ -27,6 +28,10 @@ class analizador:
     
 
     def __init__(self) :
+        self.texto = ''
+        self.fondo = ''
+        self.fuente = ''
+        self.forma = ''
             
         self.num_linea = 1 
         self.num_columna = 1
@@ -230,6 +235,23 @@ class analizador:
                 if num2.operacion(None) == '[':
                     num2 = self.operar()
 
+            #obtener las configuraciones
+            if Lexema.operacion(None) == 'texto':
+                self.texto = lista_lexa.pop(0)
+
+
+            if Lexema.operacion(None) == 'fondo':
+                self.fondo = lista_lexa.pop(0)
+
+
+            if Lexema.operacion(None) == 'fuente':
+                self.fuente = lista_lexa.pop(0)
+
+
+            if Lexema.operacion(None) == 'forma':
+                self.forma = lista_lexa.pop(0)
+
+
             if operacion and num1 and num2:
                 return Opera_aritm(num1,num2,operacion, f'Inicio: {operacion.obtener_fila()}:{operacion.obtener_columna()}' , f'Fin: {num2.obtener_fila()}:{num2.obtener_columna()} ')
             
@@ -237,7 +259,59 @@ class analizador:
                 return Opera_trigono(num1, operacion, f'Inicio: {operacion.obtener_fila()}:{operacion.obtener_columna()}', f'Fin: {num1.obtener_fila()}:{num1.obtener_columna()}')
         return None
 
+    def graficar(self):
+        global instrucciones
+
+        texto = """digraph G {
+                    label=" """+self.texto.lexema+""""
+                    rankdir="LR"
+                    
+                    node[style=filled, color=" """+self.fondo.lexema+"""", fontcolor=" """+self.fuente.lexema+"""", shape="""+self.forma.lexema+"""]"""
+
+        for i in range(len(instrucciones)):
+            
+            texto += self.unir_nodos_de_graficar(instrucciones[i], i, 0,'')
+            
+
+        texto += "\n}"
+        f = open('bb.dot', 'w')
+
+        f.write(texto)
+        f.close()
+        os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin'
+        os.system(f'dot -Tpng bb.dot -o REPORTE_202202182.png')
+
     
+    def unir_nodos_de_graficar(self, tipo, num, clave, separador):
+        datos = ""
+
+        if tipo:
+            if type(tipo) == Numero:
+                
+                datos += f'nodo{num}{clave}{separador}[label="{tipo.operacion(None)}"];\n'
+
+
+            if type(tipo) == Opera_aritm:
+                datos += f'nodo{num}{clave}{separador}[label="{tipo.tipo.lexema}\\n{tipo.operacion(None)}"];\n'
+
+                datos += self.unir_nodos_de_graficar(tipo.left ,num, clave+1, separador+"_left")
+
+                datos += f'nodo{num}{clave}{separador} -> nodo{num}{clave+1}{separador}_left;\n'
+
+                datos += self.unir_nodos_de_graficar(tipo.right,num, clave+1, separador+"_right")
+
+                datos += f'nodo{num}{clave}{separador} -> nodo{num}{clave+1}{separador}_right;\n'
+            
+            if type(tipo) == Opera_trigono:
+                
+                datos += f'nodo{num}{clave}{separador}[label="{tipo.tipo.lexema}\\n{tipo.operacion(None)}"];\n'
+
+                datos += self.unir_nodos_de_graficar(tipo.left,num, clave+1, separador+"_tri")
+
+                datos += f'nodo{num}{clave}{separador} -> nodo{num}{clave+1}{separador}_tri;\n'
+
+
+        return datos
 
     def recursividad_operar(self):
         global instrucciones

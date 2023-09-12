@@ -124,11 +124,12 @@ class app:
             messagebox.showinfo("Error","no se ha ingresado ningun archivo")
 
     def generar_graficas(self):
-        try:
-            print("probando metodo")
+        # try:
+        messagebox.showinfo("Generado","Se genero correctamente el archivo json")
+        self.Analizar.graficar()
         
-        except:
-            messagebox.showinfo("Error","no se ha ingresado ningun archivo")
+        # except:
+        #     messagebox.showinfo("Error","no se ha ingresado ningun archivo")
 
 
 

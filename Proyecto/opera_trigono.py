@@ -15,11 +15,11 @@ class Opera_trigono(Abstract_num):
 
         
         if self.tipo.operacion(arbol) == 'seno':
-            return sin(left_value)
+            return round(sin(left_value),2)
         elif self.tipo.operacion(arbol) == 'coseno':
-            return cos(left_value)
+            return round(cos(left_value),2)
         elif self.tipo.operacion(arbol) == 'tangente':
-            return tan(left_value)
+            return round(tan(left_value),2)
         else:
             return None 
 
