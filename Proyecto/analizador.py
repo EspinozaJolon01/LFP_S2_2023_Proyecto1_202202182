@@ -28,10 +28,10 @@ class analizador:
     
 
     def __init__(self) :
-        self.texto = ''
-        self.fondo = ''
-        self.fuente = ''
-        self.forma = ''
+        self.text = ''
+        self.fon = ''
+        self.fuen = ''
+        self.form = ''
             
         self.num_linea = 1 
         self.num_columna = 1
@@ -54,12 +54,12 @@ class analizador:
         'TANGENTE' : 'tangente',
         'MOD' : 'mod',
         'CONFIGURACIONES' : 'configuraciones',
-        'TEXTO' : 'Operaciones',
+        'text' : 'Operaciones',
         'FONDO' : 'azul',
-        'FUENTE' :'blanco',
-        'Textos' : 'textos',
+        'fuen' :'blanco',
+        'texts' : 'texto',
         'Fondo' : 'fondo',
-        'Fuente' : 'fuente',
+        'fuen' : 'fuente',
         'Forma' : 'forma',
         'Circulo' : 'circulo',
         'COMA' : ',',
@@ -225,7 +225,7 @@ class analizador:
 
             #obtener las configuraciones
             if Lexema.operacion(None) == 'texto':
-                self.texto = lista_lexa.pop(0)
+                self.text = lista_lexa.pop(0)
 
 
             if Lexema.operacion(None) == 'fondo':
@@ -233,11 +233,11 @@ class analizador:
 
 
             if Lexema.operacion(None) == 'fuente':
-                self.fuente = lista_lexa.pop(0)
+                self.fuen = lista_lexa.pop(0)
 
 
             if Lexema.operacion(None) == 'forma':
-                self.forma = lista_lexa.pop(0)
+                self.form = lista_lexa.pop(0)
 
 
             if operacion and num1 and num2:
@@ -250,20 +250,20 @@ class analizador:
     def graficar(self):
         global instrucciones
 
-        texto = """digraph G {
-                    label=" """+self.texto.lexema+""""
+        text = """digraph G {
+                    label=" """+self.text.lexema+""""
                     rankdir="LR"
-                    node[style=filled, color=" """+self.fondo.lexema+"""", fontcolor=" """+self.fuente.lexema+"""", shape="""+self.forma.lexema+"""]"""
+                    node[style=filled, color=" """+self.fondo.lexema+"""", fontcolor=" """+self.fuen.lexema+"""", shape="""+self.form.lexema+"""]"""
 
         for i in range(len(instrucciones)):
             
-            texto += self.unir_nodos_de_graficar(instrucciones[i], i, 0,'')
+            text += self.unir_nodos_de_graficar(instrucciones[i], i, 0,'')
             
 
-        texto += "\n}"
+        text += "\n}"
         f = open('bb.dot', 'w')
 
-        f.write(texto)
+        f.write(text)
         f.close()
         os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin'
         os.system(f'dot -Tpng bb.dot -o REPORTE_202202182.png')

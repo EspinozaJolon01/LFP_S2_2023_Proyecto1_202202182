@@ -40,7 +40,7 @@
     "configuraciones": [
         {
             "texto": "Operaciones",
-            "fondo": "blue",
+            "fondo": "red",
             "fuente": "white",
             "forma": "circle"
         }

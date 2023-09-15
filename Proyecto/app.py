@@ -125,7 +125,7 @@ class app:
 
     def generar_graficas(self):
         # try:
-        messagebox.showinfo("Generado","Se genero correctamente el archivo json")
+        messagebox.showinfo("Generado","Se genero correctamente la grafica")
         self.Analizar.graficar()
         
         # except:
