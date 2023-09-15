@@ -246,6 +246,8 @@ class analizador:
             elif operacion and num1 and operacion.operacion(None) == ('seno' or 'coseno' or 'tangente'):
                 return Opera_trigono(num1, operacion, f'Inicio: {operacion.obtener_fila()}:{operacion.obtener_columna()}', f'Fin: {num1.obtener_fila()}:{num1.obtener_columna()}')
         return None
+    
+
 
     def graficar(self):
         global instrucciones
