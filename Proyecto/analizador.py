@@ -271,33 +271,20 @@ class analizador:
     
     def unir_nodos_de_graficar(self, tipo, numero, codigo, barra):
         valor = ""
-
         if tipo:
             if type(tipo) == Numero:
-                
                 valor += f'nodo{numero}{codigo}{barra}[label="{tipo.operacion(None)}"];\n'
-
-
             if type(tipo) == Opera_aritm:
                 valor += f'nodo{numero}{codigo}{barra}[label="{tipo.tipo.lexema}\\n{tipo.operacion(None)}"];\n'
-
                 valor += self.unir_nodos_de_graficar(tipo.left ,numero, codigo+1, barra+"_left")
-
                 valor += f'nodo{numero}{codigo}{barra} -> nodo{numero}{codigo+1}{barra}_left;\n'
-
                 valor += self.unir_nodos_de_graficar(tipo.right,numero, codigo+1, barra+"_right")
-
                 valor += f'nodo{numero}{codigo}{barra} -> nodo{numero}{codigo+1}{barra}_right;\n'
             
             if type(tipo) == Opera_trigono:
-                
                 valor += f'nodo{numero}{codigo}{barra}[label="{tipo.tipo.lexema}\\n{tipo.operacion(None)}"];\n'
-
                 valor += self.unir_nodos_de_graficar(tipo.left,numero, codigo+1, barra+"_tri")
-
                 valor += f'nodo{numero}{codigo}{barra} -> nodo{numero}{codigo+1}{barra}_tri;\n'
-
-
         return valor
 
     def recursividad_operar(self):
