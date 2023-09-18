@@ -241,9 +241,9 @@ class analizador:
 
 
             if operacion and num1 and num2:
-                return Opera_aritm(num1,num2,operacion, f'Inicio: {operacion.obtener_fila()}:{operacion.obtener_columna()}' , f'Fin: {num2.obtener_fila()}:{num2.obtener_columna()} ')
+                return Opera_aritm(num1,num2,operacion , f'Inicio: {operacion.obtener_fila()}:{operacion.obtener_columna()}' , f'Fin: {num2.obtener_fila()}:{num2.obtener_columna()} ')
             
-            elif operacion and num1 and operacion.operacion(None) == ('seno' or 'coseno' or 'tangente'):
+            elif operacion and num1 and (operacion.operacion(None).lower() == 'seno' or  operacion.operacion(None).lower() == 'coseno' or  operacion.operacion(None).lower() == 'tangente' or operacion.operacion(None).lower() == 'inverso'):
                 return Opera_trigono(num1, operacion, f'Inicio: {operacion.obtener_fila()}:{operacion.obtener_columna()}', f'Fin: {num1.obtener_fila()}:{num1.obtener_columna()}')
         return None
     

@@ -14,12 +14,14 @@ class Opera_trigono(Abstract_num):
             left_value = self.left.operacion(arbol)
 
         
-        if self.tipo.operacion(arbol) == 'seno':
-            return round(sin(left_value),2)
-        elif self.tipo.operacion(arbol) == 'coseno':
-            return round(cos(left_value),2)
-        elif self.tipo.operacion(arbol) == 'tangente':
-            return round(tan(left_value),2)
+        if self.tipo.operacion(arbol).lower()  == 'seno':
+            return round(sin(radians(left_value)),2)
+        elif self.tipo.operacion(arbol).lower()  == 'coseno':
+            return round(cos(radians(left_value)),2)
+        elif self.tipo.operacion(arbol).lower()  == 'tangente':
+            return round(tan(radians(left_value)),2)
+        elif self.tipo.operacion(arbol).lower()  == 'inverso':
+            return round(1/left_value, 2)
         else:
             return None 
 
