@@ -25,7 +25,7 @@ class Opera_aritm(Abstract_num):
             return round(left_values * right_values,2)
         elif self.tipo.operacion(arbol).lower()  == 'division':
             return round(left_values / right_values,2)
-        elif self.tipo.operacion(arbol).lower()  == 'modulo':
+        elif self.tipo.operacion(arbol).lower()  == 'mod':
             return round(left_values % right_values,2)
         elif self.tipo.operacion(arbol).lower()  == 'potencia':
             return round(left_values ** right_values,2)

@@ -212,31 +212,31 @@ class analizador:
         num2 = ''
         while lista_lexa:
             Lexema = lista_lexa.pop(0)
-            if Lexema.operacion(None) == 'operacion':
+            if Lexema.operacion(None).lower() == 'operacion':
                 operacion = lista_lexa.pop(0)
-            elif Lexema.operacion(None) == 'valor1':
+            elif Lexema.operacion(None).lower() == 'valor1':
                 num1 = lista_lexa.pop(0)
                 if num1.operacion(None) == '[':
                     num1 = self.operar()
-            elif Lexema.operacion(None) == 'valor2':
+            elif Lexema.operacion(None).lower() == 'valor2':
                 num2 = lista_lexa.pop(0)
                 if num2.operacion(None) == '[':
                     num2 = self.operar()
 
             #obtener las configuraciones
-            if Lexema.operacion(None) == 'texto':
+            if Lexema.operacion(None).lower() == 'texto':
                 self.text = lista_lexa.pop(0)
 
 
-            if Lexema.operacion(None) == 'fondo':
+            if Lexema.operacion(None).lower() == 'fondo':
                 self.fondo = lista_lexa.pop(0)
 
 
-            if Lexema.operacion(None) == 'fuente':
+            if Lexema.operacion(None).lower() == 'fuente':
                 self.fuen = lista_lexa.pop(0)
 
 
-            if Lexema.operacion(None) == 'forma':
+            if Lexema.operacion(None).lower() == 'forma':
                 self.form = lista_lexa.pop(0)
 
 
